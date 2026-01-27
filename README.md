@@ -81,5 +81,42 @@ A major aspect of this project is **measuring and understanding performance**:
   - CPU utility like (vectorised asm, pipling, branch prediction, cache effect...)
   - Algorithmic think
   - Performance measure and comparison
-  - C++ tool and optimization 
-- Timing and benchmarking of different approaches
+  - C++ tooling and optimizations
+
+ ---
+
+## Build and Run (Example)
+
+```c++
+//main.cpp
+
+//Require std c++20, Boost unordered_node_map, unordered_flat_map, flat_set
+#include "../Header/Poly_Int_Pair_v2.hpp"
+#include "../Header/Timing.hpp"
+
+void generate(const int num_cells){
+    using namespace int_pair_v2;
+
+    Polyomino_class all(num_cells);
+    //generate all free polyominoes from 1 to num_cells
+
+    all.print_num();
+    //print the number of free polyominoes for each number of cell
+    //and print the number of hash for each number of cell
+
+    //all.print();
+    //print all the free polyominoes for each cumber of cell
+    //and print all the hash value for each cumber of cell
+}
+
+int main(void){
+    const int num_cells = 10;
+    timing::measure(generate, num_cells);
+    //also print the time used to generate free poly
+}
+```
+
+```bash
+cd ./PolyominoEnumerate
+make run
+```
