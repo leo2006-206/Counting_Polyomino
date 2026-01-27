@@ -8,6 +8,11 @@ The project explores both the **algorithmic side** (correct generation, symmetry
 
 The goal is not just to count polyominoes, but to **understand what is preformance engineering and improve C++ skill**.
 
+Example image (Rotation 0, Reflection 0):
+
+<img src="./PolyominoImage/8Poly_D4/Int/R0.png" alt="drawing" style="width:600px;"/>
+<img src="./PolyominoImage/8Poly_D4/Int/RF0.png" alt="drawing" style="width:600px;"/>
+
 ---
 
 ## What This Project Does
