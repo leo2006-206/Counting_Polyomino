@@ -1,0 +1,58 @@
+git cheat sheet{
+    git status 
+
+    git add <file_name>
+    git add -A //add All
+
+    git restore <file_name>
+    git restore --staged <file_name> //move from staging to working 
+
+    git commit -m "massage"
+    git commit -a -m "massage" //skip the adding to staging step, commit directly
+    git commit -m "massage" --amend //amend previous commit "massage"
+
+    git branch //check all branch and the current branch
+    git branch <new branch name> //create new branch and stay in current branch
+    git switch <branch name> //switch to other branch
+    git switch -c <new branch name> //create new branch and switch into it
+    git merge -m "massage" <branch name> //marge branch to current branch(like master),  
+    git branch -d <branch name> //delete branch
+
+    //  when merge conflict occured, goto the conflict file, delete the part you don't want
+    //  and save the part you want. then commit again
+
+    ssh git@scc-source.lancs.ac.uk
+
+    git remote add origin https://scc-source.lancs.ac.uk/wongyw5/summer_project.git
+    git branch -M main
+    git push -uf origin main
+
+    # 1. Verify current remote
+    git remote -v
+
+    # 2. Point it to the SSH URL
+    git remote set-url origin git@scc-source.lancs.ac.uk:wongyw5/summer_project.git
+
+    # 3. Test the connection
+    git ls-remote origin   # should list refs without asking for credentials
+
+    # 4. Push
+    git push --all origin
+
+    git fetch //download the change from remote host, follow by "git merge" to merge
+    git pull // = fetch + merge
+
+    git diff
+
+    git log 
+    git log -p //q to quit
+    git log --oneline
+
+    git rebase -i --root //modify the commit history book
+
+    git reset <commit history code> //code from "git log"
+
+    git rm "file_name"
+
+    git mv "old file_name" "new file_name" //rename
+}

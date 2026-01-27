@@ -1,0 +1,80 @@
+Rotation in 2D{
+  //when angle == 0, it point to positive x_axis
+  for angle i where is counter_clockwise
+  [x_2, y_2] = [[cos(i), sin(i)] [-sin(i), cos(i)]] * [x_1, y_1]
+
+
+  R(i) = [[cos(i), -sin(i)] [sin(i), cos(i)]]
+  
+  R(i) =  [cos(i) -sin(i)]
+          [sin(i)  cos(i)]
+
+  that
+  x_2 = x_1 * cos(i) - y_1 * sin(i)
+  y_2 = x_1 * sin(i) + y_1 * cos(i)
+
+  direction{
+    if i == positive -> counter_clockwise
+    if -i == negative -> clockwise
+
+    R(-i) = [cos(i)  sin(i)]
+            [-sin(i) cos(i)]
+  }
+
+  Common 2D Rotation_Matrix:
+    [0 -1]
+    [1  0] == 90  counter_clockwise, 270 clockwise  Rotation_Matrix
+
+    [-y x] = R(90) * [x y]
+
+    [-1 0]
+    [0 -1] == 180 counter_clockwise, 180 clockwise  Rotation_Matrix
+
+    [-x -y] = R(180) * [x y]
+
+    [0  1]
+    [-1 0] == 270 counter_clockwise, 90  clockwise  Rotation_Matrix
+
+    [y -x] = R(270) * [x y]
+}
+Reflection in 2D{
+  //when angle == 0, it point to positive x_axis
+  for angle i
+  Reflection(i) = [cos 2(i)  sin 2(i)]
+                  [sin 2(i) -con 2(i)]
+  
+  Common 2D Reflection_Matrix:
+    [1  0]
+    [0 -1] == Reflection(0) == Reflection(180) == Reflection on x_axis
+
+    [x -y] = Reflection(0) * [x y]
+
+    [0 1]
+    [1 0] == Reflection(45) == Reflection(225) == Reflection on line x = y
+
+    [y x] = Reflection(45) * [x y]
+
+    [-1 0]
+    [0  1] == Reflection(90) == Reflection(270) == Reflection on y_axis
+
+    [-x y] = Reflection(90) * [x y]
+
+    [0 -1]
+    [-1 0] == Reflection(135) == Reflection(315) == Reflection on line x = -y
+
+    [-y -x] = Reflection(135) * [x y]
+
+}
+Rotation + Reflection{
+  Rotation(i) * Rotation(j)     = Rotation(i + j)
+  Reflection(i) * Reflection(j) = Rotation(2i - 2j)
+  Rotation(i) * Reflection(j)   = Reflection(j + i/2)
+  Reflection(i) * Rotation(j)   = Reflection(i - j/2)
+
+  Reflection(i) = Rotation(2i) * Reflection(0)
+  Reflection(i) = Reflection(0) * Rotation(-2i)
+
+  Reflection(45) = Rotation(90) * Reflection(0)
+  Reflection(90) = Rotation(180) * Reflection(0)
+  Reflection(135) = Rotation(270) * Reflection(0)
+}

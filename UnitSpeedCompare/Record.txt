@@ -1,0 +1,101 @@
+Performance Metrics{
+	Unit Bit:
+		Bit			= 1
+		byte		= 8
+		KB			= 1024
+		MB 			= 1024^2
+		GB			= 1024^3
+		TB			= 1024^4
+
+	Unit_Time:
+		//Using Second as base
+		Day			= 24 * 3600	= 86400
+		Hour		= 3600
+		Minute		= 60
+		Second 		= 1
+		Millisecond = 10^-3 = 0.001
+		Microsecond = 10^-6 = 0.000 001
+		Nanosecond	= 10^-9 = 0.000 000 001
+
+	Input_Size per Unit_Time:
+		Input_Size per Unit_Time = N / T
+
+	Throughput:
+		//How many operation complete per Unit_Time
+		N 	= Input_Size
+		W(N)= Total_Work	//Some function of N
+		T	= Average_Time	//runtime
+
+		Throughput = N / (T * Unit_Time)	-> Throughput/s
+		OR
+		Throughput = W(N) / (T * Unit_Time)	-> Throughput/s
+
+	Memory_Bandwidth:
+		R	= # Memory Reading in byte per Input
+		W	= # Memory Writing in byte per Input
+		M	= R + W //# Memory in byte per Input
+		N*M = Total Memory in byte
+
+		Memory_Bandwidth = (N*M) / (T * Unit_Time)	-> byte/s
+		//Usually in GB/s
+
+	Cycle Per Element -> CPE:
+		Clock_freq = CPU frequency in Hz
+
+		CPE = (T * Unit_Time) * Clock_freq / N
+	
+	% of Peak Memory_Bandwidth:
+		Max_Memory_Bandwidth = Peak of Memory_Bandwidth
+
+		% = Memory_Bandwidth / Max_Memory_Bandwidth
+		//Could > 1 by hitting Cache_Bandwidth
+}
+
+Struct{
+    Construction
+    Destruction
+    Copy, Move
+    Access, Modification
+    Memory locality
+    Cache alignment
+
+    //-O3 -march=native
+    //vector size 		2 ^ 16
+	CPU frequency 		2.2
+	Boost frequency 	5.4
+	Memory_Bandwidth 	89.6 GB/s
+    timing Point_32 vs Point_8{
+        constructor_point_32{
+			Total runtime = 844225  Repeat time = 10000     Mask = 0
+			Measure in US
+					Mean (Total time / # Record) = 84
+					Mode (Most common pattern) = 83
+					Percentile_X (Item >= X% of Item)
+							P50 = 83        P90 = 83        P95 = 95
+					Range (Max - Min) = 832 -> (915 - 83)
+					Result Mask = 0
+			
+			Input_Size per Unit_Time = 2^16/84 = 780.1904762
+			Throughput = 2^16 / (84 * 10^-6) = 780190476.19
+			M = 8 R + 4 * 8 W
+			Memory_Bandwidth = (2^16 * M) / (84 * 10^-6) / 1024^3
+			= 29.064360119 GB/s
+        }
+		constructor_point_8{
+			Total runtime = 262335  Repeat time = 10000     Mask = 0
+			Measure in US
+					Mean (Total time / # Record) = 26
+					Mode (Most common pattern) = 26
+					Percentile_X (Item >= X% of Item)
+							P50 = 26        P90 = 26        P95 = 27
+					Range -> (Max - Min) = 260 -> (285 - 25)
+					Result Mask = 0
+
+			Input_Size per Unit_Time = 2^16/26 = 25206.615385
+			Throughput = 2^16 / (26 * 10^-6) = 2520615384.62
+			M = 2 R + 4 * 2 W
+			Memory_Bandwidth = (2^16 * M) / (26 * 10^-6) / 1024^3
+			= 23.4750600962 GB/s
+		}
+    }
+}

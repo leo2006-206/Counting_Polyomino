@@ -1,0 +1,64 @@
+Int_pair as point{
+    struct point{
+      int x;
+      int y;
+    }
+
+    Rotational_invariance:
+        //x' = Rotation(*) * x
+        f(x') == f(Rotation(*) x) == f(x)
+        
+        distance from point x to origin
+            is Rotational_invariance and Reflectional_invariance
+
+        
+
+    struct Polyomino{
+        container<point> _non_empty_cells
+
+        point shift_to_origin(){
+            //offset all point that min point = (0, 0)
+            //if Polyomino U and V are Translation_equivalent
+            //apply shift_to_origin to both Polyomino
+            //will cancel the Translation
+
+            point min = find_min(_non_empty_cells)
+            for(i = 0 ; i < _non_empty_cells.size(); ++i){
+                _non_empty_cells[i].x -= min.x
+                _non_empty_cells[i].y -= min.y
+            }
+            for(i = 0 ; i < _empty_cells.size(); ++i){
+                _empty_cells[i].x -= min.x;
+                _empty_cells[i].y -= mix.y;
+            }
+
+            //offset += min;
+            return min;
+        }
+    }
+}
+
+free poly{
+    _fixed_poly[8] -> {r0, r90, r180, r270, rf0, rf45, rf90, rf135}
+    _offset[8];
+
+    //_offset[i] = _offset + _fixed_poly[i].shift_to_origin();
+
+    for point x;
+    _fixed_poly[i]_x = p_global - _offset[i];
+    p_global = _fixed_poly[i]_x + _offset[i];
+
+    _fixed_poly[j]_x = p_global - _offset[j];
+    _fixed_poly[j]_x = (_fixed_poly[i]_x + _offset[i]) - _offset[j];
+    _fixed_poly[j]_x = _fixed_poly[i]_x + (_offset[i] - _offset[j]);
+
+    for point x mapping from _fixed_poly A space to _fixed_poly B space:
+    transform() -> apply action == T()
+
+    _fixed_poly[ A ]_x = p_global - _offset[ A ]
+    p_global = _fixed_poly[ A ]_x + _offset[ A ]
+
+    T(p_global) = T(_fixed_poly[ A ]_x + _offset[ A ])
+    T(_fixed_poly[ B ]_x) = T(_fixed_poly[ A ]_x + _offset[ A ]) - _offset[ B ]
+    
+}

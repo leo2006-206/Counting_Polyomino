@@ -1,0 +1,508 @@
+How to get the assembly file?
+    $(COMPILER) $(FLAGS) -S  main.cpp -o main.s
+
+How to find the function X in assembly?
+    goto assembly file
+    CTRL + F for search
+    search the name of function X -> "X"
+    find the line with ".globl" before the function
+
+How to find the assembly instruction in manual
+    goto manual
+    CTRL + F for search
+    search the name of instruction X -> "X"
+
+
+https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ssetechs=SSE4_1,SSE4_2&avxnewtechs=AVX2
+https://youtu.be/AT5nuQQO96o
+
+SIMD with intrinsics{
+	Parallel_Programming:
+		MIMD -> Multiple Intstruction Multiple Data
+		// Threading
+		SIMD -> Single Intstruction Multiple Data
+		// Vectorised code
+
+	X64 SIMD ISA:
+		MMX: 	64 bit {2 * int32_t}
+		SSE:	128 bit {4 * (float32_t / int32_t)}
+			//SSE 2, SSE 3, SSE 3, SEE4
+		AVX:	256 bit {8 * float32_t}
+			//AVX, AVX 2 {8 * int32_t}
+		FMA3:	3 = 3 operand, FMA = a*b + c
+		AVX_512:	512 bit {16 * (float32_t / int32_t)}
+
+	How to enable SIMD{
+		1:
+			-O3 -march=native with compiler
+		2:
+			write code that easier for vectorisation
+			//manually unrolled loop ...
+		3:
+			intrinsics function
+			that special function almost directly map onto 
+				specific assembly instruction
+			but compiler still handle the low level detail
+		4:
+			write assembly manually
+	}
+
+	assembly:
+			vaddps ymm2, ymm1, ymm0
+	AVX intrinsics:
+		c = _mm256_add_ps(b, a)
+		//compiler still handle which register to use and memory load, store...
+	
+	standard loop:
+		for(int64_t i = 0; i < N; ++i){
+			sumTotal += A[i];
+		}
+	SIMD loop:
+		for(int64_t i = 0; i < N; i += 8){
+			sumTotal256 = _mm256_add_ps(A256, sumTotal256);
+		}
+	
+	intrinsics header:
+		In short:
+			Only "#include <immintrin.h>"
+			compiler flag to enable ISA
+			//like -msse4.2 -mavx -mavx2 -mfma...
+			for both GCC/Clang
+
+			My cpu support
+			//MMX, SSE (1, 2, 3, 4.1, 4.2), SSSE3, EM64T,
+			//AES, AVX, AVX2, AVX_VNNI, FMA3, SHA
+
+
+		| Header        | ISA    | Register width | Notes              |
+		| ------------- | ------ | -------------- | ------------------ |
+		| `xmmintrin.h` | SSE    | 128-bit        | Float only         |
+		| `emmintrin.h` | SSE2   | 128-bit        | Adds integer SIMD  |
+		| `pmmintrin.h` | SSE3   | 128-bit        | Horizontal ops     |
+		| `tmmintrin.h` | SSSE3  | 128-bit        | Shuffle / byte ops |
+		| `smmintrin.h` | SSE4.1 | 128-bit        | Blend, dot-product |
+		| `nmmintrin.h` | SSE4.2 | 128-bit        | CRC, string ops    |
+
+		| Header         | ISA  | Register width | Notes                      |
+		| -------------- | ---- | -------------- | -------------------------- |
+		| `immintrin.h`  | AVX  | 256-bit        | Unified header (preferred) |
+		| `avxintrin.h`  | AVX  | 256-bit        | Rarely used directly       |
+		| `avx2intrin.h` | AVX2 | 256-bit        | Integer SIMD               |
+		| `fmaintrin.h`  | FMA  | 256-bit        | Fused multiply-add         |
+
+		| Header               | ISA extension | Purpose               |
+		| -------------------- | ------------- | --------------------- |
+		| `avx512fintrin.h`    | AVX-512F      | Foundation (required) |
+		| `avx512cdintrin.h`   | AVX-512CD     | Conflict detection    |
+		| `avx512dqintrin.h`   | AVX-512DQ     | Double / quad int     |
+		| `avx512bwintrin.h`   | AVX-512BW     | Byte / word ops       |
+		| `avx512vlintrin.h`   | AVX-512VL     | 128/256-bit AVX-512   |
+		| `avx512ifmaintrin.h` | AVX-512IFMA   | Int FMA               |
+		| `avx512vbmiintrin.h` | AVX-512VBMI   | Bit manipulation      |
+		| `avx512vnniintrin.h` | AVX-512VNNI   | AI / dot-product      |
+		| `avx512bf16intrin.h` | AVX-512BF16   | BFloat16              |
+		| `avx512fp16intrin.h` | AVX-512FP16   | FP16 (new CPUs)       |
+
+	Data Type:
+		//__m128 -> register xmm with 128 bit
+		//__m256 -> register ymm with 256 bit
+		//__m512 -> register zmm with 512 bit
+
+		//__mXXX -> float, __mXXX + i -> int, __mXXX + d -> double
+
+		__m64 	[MMX, (int) {8 * 8, 4 * 16, 2 * 32, 1 * 64}]
+		//Not common to use
+
+		__m128	[SEE, (float)	{4 * 32}]
+		__m128i	[SEE, (int) 	{16 * 8, 8 * 16, 4 * 32, 2 * 64}]
+		__m128d	[SEE, (double) 	{2 * 64}]
+		//signed and unsigned int, or int 8, 16, 32, 64
+		//are just __m128i
+		//but the function are differenct
+
+		__m256	[AVX, (float) 	{8 * 32}]
+		__m256i	[AVX, (int) 	{32 * 8, 16 * 16, 8 * 32, 4 * 64}]
+		__m256d	[AVX, (double) 	{4 * 64}]
+
+		__m512	[AVX_512]
+		__m512i	[AVX_512]
+		__m512d	[AVX_512]
+
+	Function pre/suf fix cheat sheet:
+		//_mm_ 		-> Data Type 128 bit, typically [SEE]
+		//_mm256_	-> Data Type 256 bit, typically [AVX, AVX2], sometime [AVX_512]
+
+		_***_ -> function name
+
+		//ps = packed_single -> float
+		//pd = packed_double -> double
+		//epi = extended_packed_int
+		//epu = extended_packed_unsigned
+		//epi [8, 16, 32, 64] = -> int lane [8, 16, 32, 64], like epi8
+		//epu [8, 16, 32, 64] = -> unsigned lane [8, 16, 32, 64], like epu8
+		//si = scalar int
+		//ss = scalar float
+		//sd = scalar double
+
+		Example:
+			_mm256_add_ps   // float
+			_mm256_add_pd   // double
+			_mm256_add_epi32 // int32
+
+	memory alignment:
+		memory address % alignment = 0
+		//alignment for vector register are not required theseday
+		//unaligned instruction are not the performance penalty theseday
+		//but it is still good to alignment just for cache line
+
+		unaligned memory allocation:
+			__m256* A = (__m256*) malloc(sizeof(__m256) * N);
+		aligned memory allocation:
+			__m256* A = aligned_alloc(alignment, sizeof(__m256) * N);
+			//where memory address % alignment = 0
+
+	intrinsics function group:
+		arithmetic	[add, sub, mul, div...]
+		logical		[and, or, xor...]
+		load/store	[read, write to main memory...]
+		comparison	[==, !=, >, < ..., return a mark ]
+		Data reattangement
+			[permuting, blend, insert, extract...]
+		broadcast, gather, scatter
+			[distributing/ collectung many data from/to a vector]
+		math		[sqrt, max, ceil...]
+		conversion	[float32_t to int32_t...]
+		//all above mapping to one SIMD assembly
+
+		//below mapping to sequence of several SIMD assembly
+		initialise vector to some constant
+		casting		[__m128 to __m128i, mapping to no ops]
+
+		latency -> # clock cycle to complete
+		throughput(CPI) -> 1 / cycle per instruction
+
+		//latency = length of 1 pipline
+		//throughput = overlapped pipline
+		lower -> better for both
+
+	arithmetic intrinsics:
+		vaddps{
+			__m256 _mm256_add_ps(__m256 a, __m256 b)
+
+			[a_7, a_6, a_5, a_4, a_3, a_2, a_1, a_0]
+			+
+			[b_7, b_6, b_5, b_4, b_3, b_2, b_1, b_0]
+			=
+			[	
+				a_7 + b_7,
+				a_6 + b_6,
+				a_5 + b_5,
+				a_4 + b_4,
+				a_3 + b_3,
+				a_2 + b_2,
+				a_1 + b_1,
+				a_0 + b_0
+			]
+			latency = 2
+			throughput = 0.5
+			//throughput 0.5 = 2 add per clock
+		}
+		vsubps{
+			__m256 _mm256_sub_ps(__m256 a, __m256 b)
+
+			performance same as vaddps
+		}
+		vmulps{
+			__m256 _mm256_mul_ps(__m256 a, __m256 b)
+
+			latency = 4
+			throughput = 0.5
+		}
+		vdivps{
+			__m256 _mm256_div_ps(__m256 a, __m256 b)
+
+			latency = 11
+			throughput = 5
+			//try to replace vdivps by other
+		}
+		vfmadd132ps{
+			__m256 _mm256_fmadd_ps (__m256 a, __m256 b, __m256 c)
+
+			a = a * b + c
+			b = a * b + c
+			c = a * b + c
+			//it reuse 1 operand, but you can still use as 4 operand
+
+			why not vmulps + vaddps:
+				d = a * b
+				d = d + c
+				//here are 2 round error
+
+				vfmadd132ps faster
+				vfmadd132ps only 1 round error
+
+			(3 operand * 256 * 3.0 GHz clock * 8 core) / (0.5 CPI) = 4.6 TB/S
+			RAM: XXX = 115 GB/S
+			
+			memory bounded 
+
+			latency = 4
+			throughput = 0.5
+		}
+
+	math intrinsics:
+		vmaxps{
+			__m256 _mm256_max_ps (__m256 a, __m256 b)
+
+			c = max(a, b)
+
+			latency = 4
+			throughput = 0.5
+		}
+		vsqrtps{
+			__m256 _mm256_sqrt_ps (__m256 a)
+
+			b = sqrt(a)
+
+			latency = 12
+			throughput = 6
+		}
+		vrsqrtps{
+			__m256 _mm256_srqrt_ps (__m256 a)
+
+			b = rsqrt(a)
+			//faster, more error
+
+			latency = 4
+			throughput = 1
+		}
+
+	logical intrinsics:
+		vandps{
+			__m256 _mm256_and_ps (__m256 a, __m256 b)
+
+			c = a & b
+
+			latency = 1
+			throughput = 1/3
+		}
+
+	load/store:
+		vmovps{
+			__m256 _mm256_load_ps (float const * mem_addr)
+
+			load data from memory to vector
+			mem_addr must aligned
+
+			latency = 7
+			throughput = 1/3
+		}
+		vmovups{
+			__m256 _mm256_loadu_ps (float const * mem_addr)
+
+			load data from memory to vector
+			mem_addr could be unaligned
+
+			latency = 7
+			throughput = 1/3
+		}
+
+	comparison:
+		vcmpps{
+			__m256 _mm256_cmp_ps (__m256 a, __m256 b, const int imm8)
+
+			comparison base on flag imm8
+
+			c = a cmp b
+			
+			true = 	0xFFFFFFFF
+			false = 0x00000000
+
+			a = [0, 0, -1, 0, 1, -1, 0, 0]
+			b = [0, 0, -2, -1, 0, 0, 1, 0]
+			flag = _CMP_GT -> >
+			c = [false, false, true, true, true, false, false, false]
+
+			latency = 4
+			throughput = 1
+		}
+		if else in SIMD{
+			say we want
+
+				if (a > b)
+					x = d;
+				else
+					x = e;
+
+			c 	= _mm256_cmp_ps(a, b, _CMP_GT)
+			// c = [false, false, true, true, true, false, false, false]
+			f1 = _mm256_and_ps(c, d)
+			// f1 = [false, false, d_5, d_4, d_3, false, false, false]
+			f2 = _mm256_and_not_ps(c, e)
+			// and_not c = [true, true, false, false, false, true, true, true]
+			// f2 = [e_7, e_6, false, false, false, e_2, e_1, e_0]
+			x = _mm256_or_ps(f1, f2)
+			// x = [e_7, e_6, d_5, d_4, d_3, e_2, e_1, e_0]
+		}
+	
+	data reattangement:
+		vpermps{
+			__m256 _mm256_permutevar8x32_ps (__m256 a, __m256i idx)
+
+			a 	= [a_7, a_6, a_5, a_4, a_3, a_2, a_1, a_0]
+			idx = [0, 1, 2, 3, 4, 5, 6, 7]	
+
+			b	= [a_0, a_1, a_2, a_3, a_4, a_5, a_6, a_7]
+
+			idx = [0, 0, 1, 1, 2, 2, 3, 3]
+			//this also work, not required unique idx
+
+			latency = 3
+			throughput = 1
+		}
+		vpermpd{
+			__m256d _mm256_permute4x64_pd (__m256d a, const int imm8)
+
+			a 	= [a_3, a_2, a_1, a_0]
+
+			//imm8 as control with only the first 8 bit
+			imm8= 0b XX XX XX XX
+
+			imm8= 0b 00 01 10 11
+			//		 0	1  2  3
+
+			b 	= [a_0, a_1, a_2, a_3]
+
+			latency = 3
+			throughput = 1
+		}
+		vpermilps{
+			__m256 _mm256_permute_ps (__m256 a, int imm8)
+
+			//some AVX instruction are implemented with two SSE lane
+			__m256 a = [256 - 128 , 127 - 0]
+			//			lane 1,		lane 2
+			//you cannot permuting element from lane 1 to lane 2
+
+			a	= [a_7, a_6, a_5, a_4, || a_3, a_2, a_1, a_0]
+			imm8= 0b 00 01 10 11
+
+			b	= [a_4, a_5, a_6, a_7, || a_0, a_1, a_2, a_3]
+			latency = 1
+			throughput = 1
+		}
+		vinsertf128{
+			__m256 _mm256_insertf128_ps (__m256 a, __m128 b, int imm8)
+
+			a 	= [a_7, a_6, a_5, a_4, a_3, a_2, a_1, a_0]
+			b	= [b_3, b_2, b_1, b_0]
+			imm8= 0 OR 1
+			// 0 insert b to a lane 0, 1 insert b to a lane 1
+
+			imm8= 0
+			c	= [a_7, a_6, a_5, a_4, b_3, b_2, b_1, b_0]
+
+			latency = 3
+			throughput = 1
+		}
+		vextractf128{
+			__m128 _mm256_extractf128_ps (__m256 a, const int imm8)
+
+			extract a lane imm8 into __m128 b
+
+			a 	= [a_7, a_6, a_5, a_4, a_3, a_2, a_1, a_0]
+			imm8= 1
+
+			b	= [a_7, a_6, a_5, a_4]
+			latency = 3
+			throughput = 1
+		}
+		vblendps{
+			__m256 _mm256_blend_ps (__m256 a, __m256 b, const int imm8)
+
+			blend a and b into c that imm8 0 -> a, 1 -> b
+
+			a	= [a_7, a_6, a_5, a_4, a_3, a_2, a_1, a_0]
+			b	= [b_7, b_6, b_5, b_4, b_3, b_2, b_1, b_0]
+			imm8= 0b 10 10 11 10
+
+			c	= [b_7, a_6, b_5, a_4, b_3, b_2, b_1, a_0]
+
+			latency = 1
+			throughput = 1/3
+		}
+		vgatherdps{
+			__m256 _mm256_i32gather_ps (float const* base_addr, __m256i vindex, const int scale)
+
+			Gather single-precision (32-bit) floating-point elements from memory using 32-bit indices.
+			32-bit elements are loaded from addresses starting 
+				at base_addr and offset by each 32-bit element in vindex 
+				(each index is scaled by the factor in scale).
+			Gathered elements are merged into dst. scale should be 1, 2, 4 or 8.
+
+			latency = 17 //slow
+			throughput = 5 //slow
+		}
+		vhaddps{
+			__m256 _mm256_hadd_ps (__m256 a, __m256 b)
+
+			Horizontally add adjacent pairs of single-precision (32-bit)
+				floating-point elements in a and b, and pack the results in dst.
+
+			a	= [a_7, a_6, a_5, a_4, a_3, a_2, a_1, a_0]
+			b	= [b_7, b_6, b_5, b_4, b_3, b_2, b_1, b_0]
+
+			c	= [
+				b_7 + b_6,
+				b_5 + b_4,
+				a_7 + a_6,
+				a_5 + a_4,
+
+				b_3 + b_2,
+				b_1 + b_0,
+				a_3 + a_2,
+				a_1 + a_0
+			]
+
+			latency = 5
+			throughput = 2
+		}
+
+	casting:
+		vcvtdq2ps{
+			__m256 _mm256_cvtepi32_ps (__m256i a)
+
+			Convert packed signed 32-bit integers in a to packed single-precision (32-bit)
+				floating-point elements, and store the results in dst.
+			
+			__m256 b = __m256i a
+
+			latency = 4
+			throughput = 0.5
+		}
+
+	Not mapping into 1 instruction:
+		set{
+			__m256 _mm256_set_ps (
+				float e7, float e6, float e5, float e4,
+				float e3, float e2, float e1, float e0
+			)
+
+			Sequence
+
+			Set packed single-precision (32-bit)
+				floating-point elements in dst with the supplied values.
+
+			a	= [e7, e6, e5, e4, e3, e2, e1, e0]
+		}
+		set1{
+			__m256 _mm256_set1_ps (float a)
+
+			Sequence
+
+			Broadcast single-precision (32-bit)
+				floating-point value a to all elements of dst.
+
+			b	= [a, a, a, a, a, a, a, a]
+		}
+}

@@ -1,0 +1,84 @@
+int_pair_v1{
+	single_core : BST_Polyomino : docker_alpine{
+		-O3{
+
+			remove_duplication before push to main vector{
+					N = 10, 94882   ms  ==  94  s
+			}
+			directly push to main vector{
+					N = 11, 1906    s
+
+					N = 10, 105     s
+									99      s
+
+					N = 9,  9       s
+									6       s
+									
+					N = 8,  0       s
+			}
+		}
+		-Ofast{
+			remove_duplication before push to main vector{
+					N = 10, 93178   ms  ==  93  s
+									93507   ms  ==  93  s
+
+					N = 9,  5       s
+			}
+			directly push to main vector{
+					N = 10, 100287s ms  ==  100 s
+
+					N = 9,  6376    ms
+									6229    ms
+									4785    ms
+			}
+		}
+		-Ofast -march=native{
+			remove_duplication before push to main vector{
+					//duration unit = ms
+					N = 9   ->  5644,   5671,   5720
+			}
+
+			directly push to main vector{
+					//duration unit = ms
+
+					N = 9   ->  5841,   5951,   6362
+			}
+		}
+	}
+
+	single_core : BST_Polyomino : window{
+		-O3{
+			remove_duplication before push to main vector{
+					N = 10, 97890   ms  ==  97  s
+									167403  ms  ==  167 s
+
+					N = 9,  5923    ms  ==  6   s
+			}
+		}
+	} 
+}
+
+
+int_pair_v2{
+	single_core : memo_Polyomino : docker_alpine{
+		Unit = ms
+	
+		[-O3, -march=native, -flto=auto]{
+			N	=	13,	[43400,	43800]
+			N = 12,	[2650,	2750]
+			N = 11, [633,	660]
+			N = 10,	[155,	165]
+			N = 9,	[38,	40]
+		}
+
+		[-Ofast, -march=native, -flto=auto]{
+			N = 9,	47	ms
+							40	ms
+							38	ms
+		}
+
+		[-O2, -march=native, -flto=auto]{
+			N = 13,	[43100,	43400, 46700]
+		}
+	}
+}

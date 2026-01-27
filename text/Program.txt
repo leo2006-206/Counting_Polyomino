@@ -1,0 +1,210 @@
+Time_Complex == worst case
+# = number of 
+
+
+int_pair{
+  Point{
+    int x, y
+
+    Point()         Time_Complex O(1)
+    Point(x, y)     Time_Complex O(1)
+
+    operator ==     Time_Complex O(1)
+    operator !=     Time_Complex O(1)
+    operator <      Time_Complex O(1)
+
+    operator +      Time_Complex O(1)
+    operator -      Time_Complex O(1)
+    operator *      Time_Complex O(1)
+    operator /
+
+    move_up         Time_Complex O(1)
+    move_right      Time_Complex O(1)
+    move_down       Time_Complex O(1)
+    mvoe_left       Time_Complex O(1)
+
+    rotate_90       Time_Complex O(1)
+    rotate_180      Time_Complex O(1)
+    rotate_270      Time_Complex O(1)
+
+    reflect_0       Time_Complex O(1)
+    reflect_45      Time_Complex O(1)
+    reflect_90      Time_Complex O(1)
+    reflect_135     Time_Complex O(1)
+
+    pair_to_int     Time_Complex O(1)
+  }
+  vector_Polyomino{
+    used vector as body
+
+    vector_Polyomino()  construct new vector -> malloc
+    operator ==     Time_Complex N
+
+    rotate_90       Time_Complex N //construct new vector -> malloc
+    rotate_180      Time_Complex N //construct new vector -> malloc
+    rotate_270      Time_Complex N //construct new vector -> malloc
+
+    reflect_0       Time_Complex N //construct new vector -> malloc
+    reflect_45      Time_Complex N //construct new vector -> malloc
+    reflect_90      Time_Complex N //construct new vector -> malloc
+    reflect_135     Time_Complex N //construct new vector -> malloc
+
+    sort            Time_Complex N log N
+    print           Time_Complex N //cout syscall
+  }
+
+  vector_Polyomino function{
+    find_cell(vector) Time_Complex N //iterate vector, size == N
+    generate_vector(vector_Polyomino root # cell == N){
+      O(1) prepare
+      O(N) iterate root
+      O(N) iterate root{
+        O(4){
+          find_cell -> O(M) //M == N * C
+          case 1:
+            
+          case 2:
+            O(N) iterate root
+        }
+      }
+    } Time_Complex O(4N(N + M) + 1)
+      Time_Complex O(N^2) N == # root cell
+
+    generate_hash_table(vector_Polyomino root # cell == N){
+      O(1) prepare
+      O(N) iterate root
+      O(N) iterate root{
+        O(4){
+          O(1) search
+          case 1:
+            O(N) iterate root
+          case 2:
+
+        }
+      }
+    } Time_Complex O(4N^2 + N)
+      Time_Complex O(N^2)
+
+    compare_translation(vector_Polyomino a, b # cell == N){
+      O(2N) copy
+      O(2N log N) sort
+      O(N) iterate a, b{
+        O(1)
+      }
+      O(1)
+    } Time_Complex O(5N + 2N log N)
+      Time_Complex O(N log N)
+    
+    compare_rotation(vector_Polyomino a, b){
+      O(3N) Rotation
+      O(3N) compare
+    } Time_Complex O(6N)
+      Time_Complex O(N)
+    
+    compare_reflection(vector_Polyomino a, b){
+      O(4N) Reflection
+      O(4N) compare
+    } Time_Complex O(4N)
+      Time_Complex O(N)
+    
+    vector_Group(size == # cell == N){
+      //not working
+      O(1)
+      O(N){
+        O()
+      }
+    }
+  }
+
+
+  BST_Polyomino{
+    used set as body
+
+    BST_Polyomino() Time_Complex O(1)
+
+    rotate_90       Time_Complex 2N //iterate BST -> 2N, that slow that iterate vector
+    rotate_180      Time_Complex 2N
+    rotate_270      Time_Complex 2N
+
+    reflect_0       Time_Complex 2N
+    reflect_45      Time_Complex 2N
+    reflect_90      Time_Complex 2N
+    reflect_135     Time_Complex 2N
+
+    print()         Time_Complex N
+
+  }
+
+  BST_Polyomino function{
+
+    generate_hash_table(BST_Polyomino root, parent_ID){
+      //# cell in root == N == size()
+      O(1) prepare
+
+      O(2N)iterate root{insert}
+
+      O(2N) iterate root{
+        O(1)
+        O(4){
+          O(1) search
+          case 1:
+            O(2N)
+          case 2:
+
+        }
+      }
+    } Time_Complex O(2N + 2N(4 * 2N)) == O(2N + 16N^2)
+      Time_Complex O(N^2)
+
+    compare_translation(BST_Polyomino a, b){
+      //# cell = N
+
+      O(1)
+      O(N) iterate a, b{
+        O(1)
+      }
+      O(1)
+    } Time_Complex O(N)
+
+    compare_rotation(BST_Polyomino a, b){
+      //# cell = N
+
+      O(N) * 3
+
+      O(4N)
+    } Time_Complex O(7N)
+
+    compare_reflection(BST_Polyomino a, b){
+      //# cell = N
+
+      O(N) * 4
+
+      O(4N)
+    } Time_Complex (8N)
+
+    remove_duplication(std::vector<BST_Polyomino>& body){
+      //vector.size() = M
+      //BST_Polyomino.size() = N
+      O(M){
+        O(M){
+          O(1)
+          compare_rotation + compare_reflection -> O(15N)
+        }
+      }
+    } Time_Complex O(M^2(15N))
+
+    BST_Group(size_t num_cell == N){
+      O(1)
+      O(N){insert}
+
+      O(1)
+      O(N){
+        O(Free Group(N)){
+          generate_hash_table O(N^2)
+          O(size of new child ~ N){insert}
+        }
+        remove_duplication -> O(Free Group(N) * N * 15N)
+      }
+    } Time_Complex O(N + N(Free Group(N)(N^2 + N + 15N^2)))
+  }
+}

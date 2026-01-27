@@ -1,0 +1,511 @@
+Polyomino is a finite connected subgraph of the square_grid
+each square_grid matched edge to edge
+with pair of adjacent cell -> edge of graph
+identified as corresponding member of Z ^ 2
+
+basic concept // from chap14{
+  cell:
+    a unit square in Cartesian_plane that the side parallel to the coordinate axes
+    and with the center at an integer point (u, v)
+  adjacent_cell:
+    for two cell, [u, v] and [r, s] with |u - r| + |v - s| = 1
+  square_grid graph:
+    the graph with vertex set Z ^ 2 and an edge for each pair of adjacent_cell
+  Polyomino:
+    a finite set S of cell that the induced subgraph of the square_grid
+    with vertex set S is connected.
+    a Polyomino of size N = N cell graph = N_omino
+    Polyomino also call Animals on the square_lattice
+}
+equivalence of Polyomino // from chap14{
+  Notions of equivalence for Polyomino act on set Z ^ 2 of cell in plane
+
+  Translation by (r, s):
+    for mapping from cell [u, v] to [u + r, v + s]
+    for mapping from Polyomino from S to S':
+      that for i in S.cell + [r, s] == j in S'.cell
+  
+  Translation_equivalent:
+    for Polyomino S and S' on same cell size,
+      S' == Translate of S
+    //the entire S move up/down by r, left/right by s == S
+  
+  Fixed_polyomino:
+    Translation_equivalent class of Polyomino
+    t(N) = the number of Fixed_polyomino with N 
+    //also use A(N)
+    //t(3) = 6
+
+  
+  Lexicographic_cell_ordering:
+    on Z ^ 2 is defined by:
+      [r, s] ≺ [u, v] if s < v, or if s == v and r < u
+    //suppose on range 0 to + infinity:
+    //  [0, x] < [1, x] < [2, x] ... that if y_1 == y_2 and x_1 < x_2
+    //  [0, x] < [0, x+1] < [0, x+2] that if y_1 < y_2
+  
+  Standard_position:
+    Translate S - (u, v) of S, where [u, v] is the Lexicographically minimum cell is S
+    A finite set S belong to Z^2 is in Standard_position iff [0, 0] in S,
+    v >= 0 for all [u, v] in S, and u >= 0 for all [u, 0] in S
+
+  Rotation_translation group:
+    the group R of mapping of Z^2 to itself of the 
+    form [u, v] -> [u, v] * [0 -1] ^ k + (r, s)
+                            [1  0]
+
+    [-y x] = R(90) * [x y]    90  counter_clockwise, 270 clockwise  Rotation_Matrix
+    [-x -y] = R(180) * [x y]  180 counter_clockwise, 180 clockwise  Rotation_Matrix
+    [y -x] = R(270) * [x y]   270 counter_clockwise, 90  clockwise  Rotation_Matrix
+
+    [x -y] = Reflection(0) * [x y]    Reflection on x_axis
+    [y x] = Reflection(45) * [x y]    Reflection on line x = y
+    [-x y] = Reflection(90) * [x y]   Reflection on y_axis
+    [-y -x] = Reflection(135) * [x y] Reflection on line x = -y
+    Reflection == M
+  
+  Rotation_equivalent:
+    Set S, S' of cell with S' = p * S for some p belong to R
+  //Polyomino S == S * R(90) == S * R(180) == S * (270)
+  //but S != S * Reflection(0)
+  //that Rotationally_distinct
+
+  Chiral_polyomino or handed_polyomino:
+    Rotation_equivalent class of Polyomino
+    r(N) = number of Chiral N_omino
+  //S == S * R(90) == S * R(180) == S * (270) is 1 Chiral_polyomino
+
+  Congruence_group:
+    all Rotation(R(90, 180, 270))
+    and Reflection + Rotation 
+    and Translation by (r, s) equivalence together
+    that all these count as 1 Polyomino
+    
+    S has the form [u, v] -> [u, v] R^k M*i + (r, s)
+    k = (0, 1, 2, or 3), i = (0 or 1), (r, s) in Z
+  
+  Free_polyomino:
+    Congruence class of Polyomino
+    s(N) = number of free n-N_omino
+}
+
+Symmetry of Polyomino{
+
+  Dihedral_Group -> D_4(Free_polyomino S){
+    //all Action for a Free_polyomino
+    Action{
+      Rotation(0),
+      Rotation(90),
+      Rotation(180),
+      Rotation(270),
+      Reflection(0),
+      Reflection(45),
+      Reflection(90),
+      Reflection(135)
+    }
+    |D_4| = 8
+  }
+
+  Let P be a fixed polyomino (a representative of free poly S).
+
+  Orbit(P) = { g·P | g ∈ D4 }  // set of distinct fixed polys
+  |Orbit(P)| = # Fixed_polyomino in class of free poly S
+
+  Stabilizer(P) = { g ∈ D4 | g·P = P }  // symmetry group of P
+  |Stabilizer(P)| = symmetry group size
+
+  Orbit(S) = |D_4| / Stabilizer(S)
+
+  Stabilizer(S) = |D_4| / Orbit(S)
+
+  Case{
+    8 Fixed_polyomino:
+      No Symmetry
+      //all Action lead S to different Fixed_polyomino
+      Orbit(S) = 8
+      Stabilizer(S) = 1
+      The_Trivial_Group = group{Rotation(0)}
+
+    4 Fixed_polyomino:
+      Orbit(S) = 4
+      Stabilizer(S) = 2
+
+      C_2 = group{Rotation(0), Reflection(0)}
+      C_2 = group{Rotation(0), Reflection(90)}
+      C_2 = group{Rotation(0), Reflection(45)}
+      C_2 = group{Rotation(0), Reflection(135)}
+      2_Fold = group{Rotation(0), Rotation(180)}
+    
+    2 Fixed_polyomino:
+      Orbit(S) = 2
+      Stabilizer(S) = 4
+
+      D_2 = group{Rotation(0), Rotation(180), Reflection(0), Reflection(90)}
+      D_2 = group{Rotation(0), Rotation(180), Reflection(45), Reflection(135)}
+      C_4 = group{Rotation(0), Rotation(90), Rotation(180), Rotation(270)}
+
+    1 Fixed_polyomino:
+      Orbit(S) = 1
+      Stabilizer(S) = 8
+
+      D_4 = group{
+        Rotation(0), Rotation(90), Rotation(180), Rotation(270),
+        Reflection(0),Reflection(45),Reflection(90),Reflection(135)
+      }
+  }
+
+  identical mapping{
+
+
+
+
+    ////
+
+
+    incomplete
+
+
+    ////
+    given Free_polyomino S
+    transform to Fixed_polyomino P with Action
+    {
+      Rotation(0),
+      Rotation(90),
+      Rotation(180),
+      Rotation(270),
+      Reflection(0),
+      Reflection(45),
+      Reflection(90),
+      Reflection(135)
+    }
+
+    The_Trivial_Group = group{Rotation(0)}{
+      all P are distinct
+    }
+
+    C_2 = group{Rotation(0), Reflection(0)}{
+      0 0 0 0 
+      0 1 1 0
+      0 1 0 0
+      0 1 1 0
+      0 0 0 0
+
+      Rotation(0)   ==  Reflection(0)
+      Rotation(90)  ==  Reflection(45)
+      Rotation(180) ==  Reflection(90)
+      Rotation(270) ==  Reflection(135)
+    }
+
+    C_2 = group{Rotation(0), Reflection(90)}{
+      
+    }
+
+    C_2 = group{Rotation(0), Reflection(45)}{
+      0 0 0 0
+      0 1 0 0
+      0 1 1 0
+      0 0 0 0
+      Rotation(0)   ==  Reflection(45)
+      Rotation(90)  ==  Reflection(90)
+      Rotation(180) ==  Reflection(135)
+      Rotation(270) ==  Reflection(0)
+    }
+  }
+
+  given Polyomino S with Symmetry group G
+  Set of adjacent_empty_cell of S = A
+  Set of unique_child = U
+
+  |U| <= |A|
+  |U| <= [|A| / |G|, |A|]
+  // for each cell C in A at most remove |G| cells in |A| to become unique_child
+  // however two or more symmetry Action on C in G could lead to the same product
+  // like Rotation(180) * C == Reflection(0) * C
+
+
+  Centiord = geometric center of a geometric object
+  Center_of_gravity = CoG = average location of an object’s weight
+
+  Centiord(Polyomino S).x = (sum{i = 1 to n}(x_i)) / n
+  Centiord(Polyomino S).y = (sum{i = 1 to n}(y_i)) / n
+
+  Translate Polyomino S that (0, 0) = Centiord(S)
+    //New point need to store as float
+    //This cancel the Translation
+    For each point p:
+      p.x = p.x - Centiord(S).x
+      p.y = p.y - Centiord(S).y
+}
+
+
+Determine # child from given Polyomino //from my own{
+  given Polyomino = root with N cell
+  child = extended Polyomino from root with N + 1 cell
+  find maximum # child from root
+
+  in other word
+
+  given Polyomino
+  find all empty adjacent_cell next to Polyomino
+
+  define{
+    root    = |S|
+    # child = |S'|
+    cell    = N
+    face    = f = the edge of cell that connected with empty cell
+    bridge  = b = the connection between cell and adjacent_cell
+    shared_face {X = 1, 2, 3, 4}
+            = sf = the empty cell that connected to X non_empty cell
+    //shared_face_1 == face, that this empty cell connected to 1 cell
+    //shared_face_2 == empty cell that connected to 2 cell
+    //shared_face_3 == empty cell that connected to 3 cell
+    //shared_face_4 == empty cell that connected to 4 cell
+
+    shared_face example{
+      0 == empty cell, 1 == non_empty cell
+      shared_face_1{
+        0   1 0   1   0 1
+        1         0   
+        //need minimum 1 cell
+      }
+      shared_face_2{
+        1 0   1 1   1 1   0 1
+        1 1   1 0   0 1   1 1
+
+        if N > 1:
+        then 1 cell have maximum 3 face
+
+        but with shared_face_2
+        2 face shared 1 empty cell
+        that only 1 face can use this empty cell
+        OR either face a or b use this empty cell
+        the child from extended a or b will still same
+
+        2 - 1 = 1
+        C * shared_face_2 -> - C * 1 face
+        //need minimum 3 cell
+      }
+      shared_face_3{
+        1 0 1   1 1   1 1 1   1 1
+        1 1 1   1 0   1 0 1   0 1
+                1 1           1 1
+
+        3 face shared 1 empty cell
+        but only 1 face can use this empty cell
+        
+        3 - 2 = 1
+        C * shared_face_3 -> - C * 2 face
+        //need minimum 5 cell
+      }
+      shared_face_4{
+        1 1 1
+        1 0 1
+        1 1 0
+
+        4 face shared 1 empty cell
+        but only 1 face can use this empty cell
+
+        4 - 3 = 1
+        C * shared_face_4 -> - C * 3 face
+        //need minimum 7 cell
+      }
+    }
+  }
+
+  basic formula:
+    f = shared_face_1 = 4 N - 2 b
+    //that each cell have 4 face
+    //each bridge use 2 face
+
+  maximum f with N cell Polyomino:
+    maximum f = 4 N - 2 (N - 1) == 2N + 2
+    //each cell have 4 face
+    //when the Polyomino form a long rectangle/ path
+    //maximum # bridge == N - 1
+    like{
+      0 0 0 0 0 
+      0 1 1 1 0 
+      0 0 0 0 0
+    }
+  
+  general formula:
+    |S'| = shared_face_1 - 1 * shared_face_2 - 2 * shared_face_3 - 3 * shared_face_4
+        = f - (1 * shared_face_2 + 2 * shared_face_3 + 3 * shared_face_4)
+        = 4 N - 2 b - (1 * shared_face_2 + 2 * shared_face_3 + 3 * shared_face_4)
+    //this formula match the data from N -> (1, 9)
+  
+  interesting Polyomino:
+    for N >= 3:
+      suppose it call diagonal path
+      it always expand as diagonal path
+      each time it consume 1 fase to expand 1 new cell,
+      it create 3 face with 1 more shared_face_2
+      
+      each expand -> + 3 face - 1 face + shared_face_2
+                  -> + 3 - 1 - 1 = + 1 face
+      where |S'| = 2N + 2 - (1 * (N - 2) + 2 * 0 + 3 * 0)
+                = 2(N + 1) - (N - 2)
+                = N + 4
+      N == 3{
+        0 0 0 0
+        0 1 0 0
+        0 1 1 0 
+        0 0 0 0
+
+        f = 4 * 3 - 2 * 2 = 8
+        |S'| = f - (1 * 1 + 2 * 0 + 3 * 0)
+        |S'| = 7
+
+        |S'| = 2 * 3 + 2 - (1 * (3 - 2))
+        |S'| = 8 - 1 = 7
+      }
+      N == 4{
+        0 0 0 0 0
+        0 0 1 1 0
+        0 1 1 0 0
+        0 0 0 0 0
+
+        |S'| = 10 - 2 = 8
+      }
+      N == 5{
+        0 0 0 0 0
+        0 0 1 1 0 
+        0 1 1 0 0
+        0 1 0 0 0
+        0 0 0 0 0
+
+        |S'| = 5 + 4 = 9
+      }
+
+    
+}
+Animals encoding //from my own{
+  different method to encode the Animals
+  suppose all Animals have origin cell at (0, 0)
+  1. 2d bit_array{
+    store as bit_string in 2d bit_array
+    x = number of cell
+    f(x) = (2x-1) + 2 * (sum of(i in 1 to x-1) 2i-1) = x^2 + (x-1)^2
+    f(5) = (2*5-1) + 2 * (sum of(i in 1 to 5-1) 2i-1) = 5^2 + (5-1)^2
+    = 9 + 2 * (1 + 3 + 5 + 7) = 25 + 16
+
+    the Manhattan_geometry space for maximum path distance (x-1) for origin (0, 0)
+    space_complexity = f(x) 
+    for aligment, we round up to power of 2
+
+    or store all as {2x + 1 col row 2D bit_array}
+    space_complexity = (2x + 1)^2 bit = 4x^2 - 4x + 1 bit
+  }
+  2. search path as bit_string{
+    store the search path start from origin as bit string
+    4 bit per cell, 0 0 0 0 == up, right, down, left
+    assume # cell >= 1
+    // 0 1 1 0 == there are adjacent_cell at right and down
+
+    improve by not store the previous movement path,
+    that convert undirected general graph to directed acyclic graph
+
+    assume the origin cannot move down
+    that 0 0 X 0 -> 0 0 0 == up right left
+    previous movement = 0 up,     then skip 2 down  == 0 0 X 0
+    previous movement = 1 right,  then skip 3 left  == 0 0 0 X
+    previous movement = 2 down,   then skip 0 up    == X 0 0 0
+    previous movement = 3 left,   then skip 1 right == 0 X 0 0
+
+    int skip[4] = {2, 3, 0, 1}
+
+    example:
+      0 1
+      0 1 <= origin
+    1{0 0 0} 0 0
+    1{0 0 X 0} 0 X 0
+
+    DFS order path{
+      start at origin,
+      when reach a adjacent_cell that 1
+      directly go into a adjacent_cell
+    }
+
+    helper(previous movement{0 to 3}, j{0 to 2}){
+      if previous == 0, j{0 -> 0, 1 -> 1, 2 -> 3}
+      if previous == 1, j{0 -> 0, 1 -> 1, 2 -> 2}
+      if previous == 2, j{0 -> 1, 1 -> 2, 2 -> 3}
+      if previous == 3, j{0 -> 0, 1 -> 2, 2 -> 3}
+
+      if j >= skip[previous movement]:
+        return j + 1
+      else:
+        return j
+    }
+    python for decode{
+      def decode(bit_string: str, size: int):
+          # 0=Up, 1=Right, 2=Down, 3=Left
+          STEP = [(0,1), (1,0), (0,-1), (-1,0)]
+          REV  = [2,3,0,1]
+
+          def kth_candidate(prev, j):
+              """Map j in {0,1,2} to an actual direction ∈ {0..3}, skipping REV[prev]."""
+              forbid = REV[prev]
+              k = -1
+              for d in (0,1,2,3):
+                  if d == forbid:
+                      continue
+                  k += 1
+                  if k == j:
+                      return d
+              raise RuntimeError("bad j")
+
+          if size <= 0:
+              return [], set()
+
+          i = 0  # bit index
+          seen = {(0,0)}
+          # stack items: (x, y, prev_dir, j)
+          stack = [(0, 0, 0, 0)]  # root uses prev_dir=0 so we skip Down at root
+          edges = []              # ((x,y),(nx,ny), kind="tree"/"back")
+
+          while stack:
+              x, y, prev, j = stack[-1]
+
+              if j == 3 or i >= len(bit_string):
+                  stack.pop()
+                  continue
+
+              d = kth_candidate(prev, j)
+
+              if bit_string[i] == '0':
+                  i += 1
+                  stack[-1] = (x, y, prev, j+1)
+                  continue
+
+              # bit = '1' → edge exists
+              i += 1
+              dx, dy = STEP[d]
+              nx, ny = x + dx, y + dy
+
+              if (nx, ny) in seen or len(seen) >= size:
+                  edges.append(((x,y), (nx,ny), "back"))
+                  stack[-1] = (x, y, prev, j+1)
+              else:
+                  edges.append(((x,y), (nx,ny), "tree"))
+                  seen.add((nx,ny))
+                  # advance parent j, then push child
+                  stack[-1] = (x, y, prev, j+1)
+                  stack.append((nx, ny, d, 0))
+
+          return edges, seen
+
+
+      edges, seen = decode("101001001010", 4)
+    }
+  }
+
+  3. two int as point{
+    struct{
+      int x;
+      int y;
+    }
+
+    
+  }
+}
