@@ -5,13 +5,6 @@
 
 
 #define DATA_FILE "../CSV_Data/Data.csv"
-
-void generate(){
-    using namespace int_pair_v2;
-
-    Polyomino_class all(11);
-    all.print_num();
-}
 void test1(){
     using namespace int_pair_v3;
 
@@ -100,11 +93,23 @@ void test3(){
     std :: cout << "\n" << sizeof(free_Polyomino);
 }
 
+void generate(const int num_cells){
+    using namespace int_pair_v2;
+
+    Polyomino_class all(num_cells);
+    //generate all free polyominoes from 1 to num_cells
+
+    all.print_num();
+    //print the number of free polyominoes for each number of cell
+    //and print the number of hash for each number of cell
+
+    //all.print();
+    //print all the free polyominoes for each cumber of cell
+    //and print all the hash value for each cumber of cell
+}
+
 int main(void){
-    timing::timer<std::chrono::milliseconds> my_timer;
-    my_timer.start();
-
-    test1();
-
-    my_timer.end_print();
+    const int num_cells = 15;
+    timing::measure("Generate Free Poly up to 10 cells", generate, num_cells);
+    //also print the time used to generate free poly
 }

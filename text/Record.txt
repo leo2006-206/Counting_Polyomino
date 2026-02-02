@@ -1,4 +1,4 @@
-int_pair_v1{
+int_pair_v1, window{
 	single_core : BST_Polyomino : docker_alpine{
 		-O3{
 
@@ -59,7 +59,7 @@ int_pair_v1{
 }
 
 
-int_pair_v2{
+int_pair_v2, window{
 	single_core : memo_Polyomino : docker_alpine{
 		Unit = ms
 	
@@ -79,6 +79,16 @@ int_pair_v2{
 
 		[-O2, -march=native, -flto=auto]{
 			N = 13,	[43100,	43400, 46700]
+		}
+	}
+}
+
+int_pair_v2, linux{
+	single_core : memo_Polyomino : host{
+		Unit = ms
+
+		[-O3, -march=native, -flto=auto]{
+			N = 10,	[96,	102,	111]
 		}
 	}
 }

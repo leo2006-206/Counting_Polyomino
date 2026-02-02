@@ -50,9 +50,9 @@ namespace timing{
         void finish(){after = std::chrono::high_resolution_clock::now();}
         void end_print(const char* text = ""){
             finish();
-            std::cout<<"\nDuration\t"<<text<<"\t= "<<
+            std::cout<<"\n\n\x1b[36mDuration\t"<<text<<" = "<<
             std::chrono::duration_cast<T>(after - before).count()<<
-            timer_unit<T>::unit_text<<"\n\n";
+            timer_unit<T>::unit_text<<"\x1b[0m\n\n";
         }
         std::int64_t end_time(){
             finish();
@@ -60,9 +60,9 @@ namespace timing{
         }
     };
 
-    template <typename F, typename... Args>
+    template <typename Unit = std::chrono::milliseconds, typename F, typename... Args>
     void measure(const char* text, F&& function, Args&&... argument){
-        timer my_timer;
+        timer<Unit> my_timer;
         my_timer.start();
 
         std::forward<F>(function)(std::forward<Args>(argument)...);
