@@ -16,7 +16,7 @@ The ultimate goal isn't just a high cell count
 
 it's to master performance engineering and advanced C++ paradigms.
 
-Example image for **$\text{Trivial Group}\rightarrow \text{\{e\}}$ Polyomino** with 8 cells (Rotation 0, Reflection 0):
+Example image for **$\text{Trivial Group}$ Polyomino** with 8 cells (Rotation 0, Reflection 0):
 
 <img src="./PolyominoImage/8Poly_D4/Int/R0.png" alt="drawing" style="width:600px;"/>
 <img src="./PolyominoImage/8Poly_D4/Int/RF0.png" alt="drawing" style="width:600px;"/>
@@ -69,7 +69,7 @@ Goal:
 * Explore of possibility of **Rotation Invariant enumeration model**
 
 Outcome:
-* Discover relationship between $\text{Symmetry of Polyomino}$ and $\text{Duplicated \& Unique Child of Polyomino}$
+* Discover relationship between $\text{Symmetry of Polyomino}$ and $\text{Duplicated / Unique Child of Polyomino}$
 * Improve enumeration model by memorization, utilised algorithm & data structure
 * Developed benchmark framework `timing.hpp`
 * Developed enumeration model `Poly_Int_Pair_v2.hpp` with `Poly_Int_Pair_v2.cpp`
@@ -139,8 +139,8 @@ A major aspect of this project is **measuring and understanding performance**:
 Compiler OPT flag = `-03, -march=native, -flto`
 
 Stage 1 `Poly_Int_Pair_v1`:
-* N = 9,  5605,   5702,   5659
-* N = 10, 88291,  88789,  88301
+* N = 9, 	Time = 5605,   5702,   5659
+* N = 10,	Time = 88291,  88789,  88301
 
 Reflection:
 * Use of `std::set` as main container
@@ -155,11 +155,11 @@ Reflection:
 <br>
 
 Stage 2 `Poly_Int_Pair_v2`:
-* N = 9,  29,   35,   32
-* N = 10, 97,   103,  109
-* N = 11, 400,  408,  417
-* N = 12, 1743, 1750, 1763
-* N = 13, 7558, 7565, 7569
+* N = 9, 	Time = 29,   35,   32
+* N = 10,	Time = 97,   103,  109
+* N = 11,	Time = 400,  408,  417
+* N = 12,	Time = 1743, 1750, 1763
+* N = 13,	Time = 7558, 7565, 7569
 
 Reflection:
 * Use of `Boost flat_set (vector)` as main container
@@ -173,7 +173,7 @@ Reflection:
   * No construction for `empty cell` needed
 * Most hot path functions do vectorised with v256 //Reading asm
 
-Improvement:
+Possible Improvement:
 * Only store 1 Fixed Polyomino in memory
   * Still need to generate 7 permutated Polyominoes
 * `Boost flat_set` create branching and memory shifting
