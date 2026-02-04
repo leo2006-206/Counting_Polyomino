@@ -61,13 +61,13 @@ namespace timing{
     };
 
     template <typename Unit = std::chrono::milliseconds, typename F, typename... Args>
-    void measure(const char* text, F&& function, Args&&... argument){
+    void measure(F&& function, Args&&... argument){
         timer<Unit> my_timer;
         my_timer.start();
 
         std::forward<F>(function)(std::forward<Args>(argument)...);
 
-        my_timer.end_print(text);
+        my_timer.end_print();
     }
 
 

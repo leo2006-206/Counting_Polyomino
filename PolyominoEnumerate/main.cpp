@@ -109,7 +109,9 @@ void generate(const int num_cells){
 }
 
 int main(void){
-    const int num_cells = 15;
-    timing::measure("Generate Free Poly up to 10 cells", generate, num_cells);
+
+    constexpr int num_cells = 13;
+
+    timing::measure(generate, num_cells);
     //also print the time used to generate free poly
 }
