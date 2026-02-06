@@ -132,7 +132,7 @@ A major aspect of this project is **measuring and understanding performance**:
 
  ---
 
-## Performance Comparison*
+## Performance Comparison
 
 **N** = number of cells, **Time Unit** = MS
 
