@@ -4,22 +4,27 @@
 
 **Counting Polyomino** is a C++ project dedicated to the **enumeration** and **performance analysis** of polyominoes.
 
-> **Polyominoes**: Connected shapes formed by joining unit squares edge-to-edge.
+* **Polyominoes**: Connected shapes formed by joining unit squares edge-to-edge.
 
-The Philosophy:
 
-Rather than just implementing a "*textbook*" algorithm,
+Rather than just implementing a "*Goto*" algorithm,
 this project bridges the gap between **algorithmic theory** (generation, symmetry, and counting)
 and **systems engineering** (cache-friendly memory layouts, multithreading, and assembly-level optimization) **from scratch**.
 
-The ultimate goal isn't just a high cell count
+The ultimate goal is not a high cell count
 
-it's to master performance engineering and advanced C++ paradigms.
+It is to learn performance engineering and advanced C++ paradigms.
 
 Example image for **$\text{Trivial Group}$ Polyomino** with 8 cells (Rotation 0, Reflection 0):
 
 <img src="./PolyominoImage/8Poly_D4/Int/R0.png" alt="drawing" style="width:600px;"/>
 <img src="./PolyominoImage/8Poly_D4/Int/RF0.png" alt="drawing" style="width:600px;"/>
+
+---
+
+## Project Inspiration ##
+
+This project inspired by [Mike's Cube Code - Computerphile](https://www.youtube.com/watch?v=g9n0a0644B4)
 
 ---
 
@@ -139,8 +144,11 @@ A major aspect of this project is **measuring and understanding performance**:
 Compiler OPT flag = `-03, -march=native, -flto`
 
 Stage 1 `Poly_Int_Pair_v1`:
-* N = 9, 	Time = 5605,   5702,   5659
-* N = 10,	Time = 88291,  88789,  88301
+
+|Number of cells|Duration 1|Duration 2|Duration 3|
+|:---:|:---:|:---:|:---:|
+|9	| 5605|   5702|   5659 |
+|10	| 88291|  88789|  88301|
 
 Reflection:
 * Use of `std::set` as main container
@@ -155,11 +163,14 @@ Reflection:
 <br>
 
 Stage 2 `Poly_Int_Pair_v2`:
-* N = 9, 	Time = 29,   35,   32
-* N = 10,	Time = 97,   103,  109
-* N = 11,	Time = 400,  408,  417
-* N = 12,	Time = 1743, 1750, 1763
-* N = 13,	Time = 7558, 7565, 7569
+
+|Number of cells|Duration 1|Duration 2|Duration 3|
+|:---:|:---:|:---:|:---:|
+| 9	| 29 | 35 | 32 |
+| 10| 97 | 103| 109|
+| 11| 400|  408|  417|
+|12 | 1743| 1750| 1763|
+|13	| 7558| 7565| 7569|
 
 Reflection:
 * Use of `Boost flat_set (vector)` as main container
