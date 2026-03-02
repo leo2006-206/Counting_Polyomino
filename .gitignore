@@ -2,5 +2,6 @@
 *.o
 *.s
 main
-.data
-.old
+record_main
+*.data
+*.old
