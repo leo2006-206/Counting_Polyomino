@@ -20,16 +20,27 @@ IMAGE = polyomino_testing
 # clean:
 # 	rm -f main.o $(NAME).o
 
-docker:
-	docker desktop start
-building:
-	docker build -t $(IMAGE) .
-running:
-	docker run --rm -it \
-	--security-opt seccomp=unconfined \
-	--cap-add SYS_ADMIN \
-  	--cap-add SYS_PTRACE \
-	--privileged \
-	-v "$(CWD):/app" -w /app $(IMAGE) ash
-removing:
-	docker image rm $(IMAGE)
+# docker:
+# 	docker desktop start
+# building:
+# 	docker build -t $(IMAGE) .
+# running:
+# 	docker run --rm -it \
+# 	--security-opt seccomp=unconfined \
+# 	--cap-add SYS_ADMIN \
+#   	--cap-add SYS_PTRACE \
+# 	--privileged \
+# 	-v "$(CWD):/app" -w /app $(IMAGE) ash
+# removing:
+# 	docker image rm $(IMAGE)
+
+ssh1:
+	eval "$$(ssh-agent -s)"
+	
+ssh2:
+	ssh-add ~/.ssh/leowong121073/id_ed25519
+
+ssh3:
+	ssh -T git@github.com
+
+ssh: ssh1 ssh2 ssh3
