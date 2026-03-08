@@ -1084,8 +1084,8 @@ namespace int_pair_v2{
             for(auto p : sub_v){
                 std::cout << "\n\tid = " << idx;
                 p.print();
-                std::cout	<< "\n\t\tdis non_empty = " << distance_of_point_set(p._non_empty_cells)
-                            << "\t dis empty = " << distance_of_point_set(p._empty_cells);
+                // std::cout	<< "\n\t\tdis non_empty = " << distance_of_point_set(p._non_empty_cells)
+                //             << "\t dis empty = " << distance_of_point_set(p._empty_cells);
                 idx++;
             }
         }

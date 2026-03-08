@@ -269,6 +269,32 @@ namespace int_pair_v3{
         }
     }
 
+	std::vector<free_Polyomino::self_t> free_Polyomino::generate_unique_child(){
+		_sym_mask = symmetry_mask::set_sym(*this);
+
+		auto childs = symmetry_mask::get_unique_child(*this);
+
+		std::vector<self_t> result;
+		result.reserve(childs.size());
+
+		for(point_t child : childs){
+			result.emplace_back(*this);
+			result.back().grow_and_shift(child);
+		}
+
+		return result;
+	}
+
+	free_Polyomino::self_t	free_Polyomino::base_case(){
+		free_Polyomino result;
+
+		for(auto& poly : result._fixed_class){
+			poly.base_case();
+		}
+
+		return result;
+	}
+
     //free_poly
 
 
@@ -632,6 +658,7 @@ namespace int_pair_v3{
 
     symmetry_mask::set_t symmetry_mask::get_unique_child(const poly_t &target){
         set_t result = target._fixed_class[0]._empty_cells;
+		point_t base_offset = target._offset[0];
         mask_t temp = target._sym_mask;
 
         auto uniquify = [&](std::span<const index_t> mapping){
@@ -640,7 +667,7 @@ namespace int_pair_v3{
             // }
 
             for(auto it = result.begin(); it != result.end(); ){
-                auto trans_array = (*it).transformed_points();
+                auto trans_array = (*it + base_offset).transformed_points();
                 
                 for(const index_t index : mapping){
                     // std::cout << "\nit = "<<it->str();
@@ -718,6 +745,83 @@ namespace int_pair_v3{
     }
 
     //sym_mask
+
+	unified_container::unified_container(const std::size_t num_cell){
+		auto core_logic = [this](
+			const std::size_t parent_index,
+			poly_t& parent,
+			poly_vector_t& target_poly,
+			hash_table_t& target_hash
+		) -> void{
+			std::vector<poly_t> childs = parent.generate_unique_child();
+			parent._num_child = childs.size();
+
+			// std::cout << "\nDEBUG parent = " << parent_index<<"\n";
+			// parent.print();
+			// std::cout << "\nunique child\t";
+			// for(auto p : symmetry_mask::get_unique_child(parent)){
+			// 	std::cout << p.str() <<"\t";
+			// }
+
+			for(poly_t& child : childs){
+				std::uint32_t is_new_mask = 0;
+				std::array<hash_t, 8> hash_array = child.fixed_class_hash();
+
+				for(int hash_index = 0; hash_index < 8; ++hash_index){
+					std::uint32_t mask = !target_hash.contains(hash_array[hash_index]);
+					is_new_mask |= (mask << hash_index);
+				}
+
+				if(is_new_mask){
+					child._parent_id = parent_index;
+					target_poly.push_back( std::move(child) );
+					const std::size_t child_index = target_poly.size() - 1;
+
+					for(int hash_index = 0; hash_index < 8; ++hash_index){
+						std::uint32_t temp = is_new_mask & (1 << hash_index);
+
+						if(temp){
+							target_hash.insert(
+								{hash_array[hash_index], child_index}
+							);
+						}
+					}
+				}
+			}
+		};
+
+		std::cout << "\nNumber of Cells = "<<num_cell;
+		
+		hash_container.resize(num_cell);
+		poly_container.resize(num_cell);
+
+		poly_container[0].emplace_back(poly_t::base_case());
+		hash_container[0].insert(
+			{poly_container[0].back()._fixed_class[0].poly_to_hash(), 0}
+		);
+
+		for(std::size_t n_cell = 1; n_cell < num_cell; ++n_cell){
+			auto& prev_poly_v = poly_container[n_cell-1];
+			auto& curr_poly_v = poly_container[n_cell];
+			auto& curr_hash_table = hash_container[n_cell];
+
+			const std::size_t prev_poly_N = prev_poly_v.size(); 
+			for(
+				std::size_t prev_poly_index = 0;
+				prev_poly_index < prev_poly_N;
+				++prev_poly_index
+			){
+
+				core_logic(
+					prev_poly_index,
+					prev_poly_v[prev_poly_index],
+					curr_poly_v,
+					curr_hash_table
+				);
+
+			}
+		}
+	}
 
     void sort_and_insert_set(memo_Polyomino::_set_t& flat_set, std::vector<memo_Polyomino::point_t>& vector){
         std::sort(vector.begin(), vector.end(), 	

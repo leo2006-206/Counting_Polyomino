@@ -208,7 +208,30 @@ namespace int_pair_v3{
 				_fixed_class[i]._cells = rhs._fixed_class[i]._cells;
 				_fixed_class[i]._empty_cells = rhs._fixed_class[i]._empty_cells;	
 			}
+			for(std::size_t i = 0; i < 8; ++i){
+				_offset[i] = rhs._offset[i];
+			}
 		}
+
+		self_t&	operator=(const self_t& rhs){
+			if(this == &rhs){
+				return *this;
+			}
+
+			_parent_id	= rhs._parent_id;
+			_num_child	= rhs._num_child;
+			_sym_mask	= rhs._sym_mask;
+
+			for(std::size_t i = 0; i < 8; ++i){
+				_fixed_class[i]._cells = rhs._fixed_class[i]._cells;
+				_fixed_class[i]._empty_cells = rhs._fixed_class[i]._empty_cells;	
+			}
+			for(std::size_t i = 0; i < 8; ++i){
+				_offset[i] = rhs._offset[i];
+			}
+
+			return *this;
+		};
 
 		free_Polyomino(const memo_Polyomino& rhs):	
 		_fixed_class(),
@@ -240,7 +263,11 @@ namespace int_pair_v3{
 
 		void grow_and_shift(point_t child);
 
+		std::vector<self_t> generate_unique_child();
+
 		void print() const;
+
+		static self_t	base_case();
 
 	};
 
@@ -336,7 +363,70 @@ namespace int_pair_v3{
 
 	struct unified_container{
 		using	poly_t = free_Polyomino;
-		
+		using	hash_t = poly_t::hash_t;
+
+		using	hash_table_t	= boost::unordered::unordered_node_map<hash_t, std::size_t>;
+		using	poly_vector_t	= std::vector<poly_t>;
+
+		using	hash_container_t	= std::vector<hash_table_t>;
+		using	poly_container_t	= std::vector<poly_vector_t>;
+
+		hash_container_t hash_container;
+		poly_container_t poly_container;
+
+		unified_container(const std::size_t num_cell);
+
+		void print_poly() const{
+			std::size_t n = 1;
+			for(auto& sub_v : poly_container){
+				std::cout << "\nNum cell = " << n << "\t# Poly = " << sub_v.size();
+				n++;
+
+				std::size_t idx = 1;
+				for(auto p : sub_v){
+					std::cout << "\n\tindex = " << idx;
+					p.print();
+					idx++;
+				}
+			}
+		}
+		void print_hash() const{
+			std::size_t n = 1;
+			for(auto& sub_hash_table : hash_container){
+				std::cout << "\nNum cell = " << n << "\t# hash = " << sub_hash_table.size();
+				n++;
+
+				using my_pair = std::pair<hash_t, std::size_t>;
+				std::vector<my_pair> temp_v;
+				for(auto [hash, index] : sub_hash_table){
+					temp_v.emplace_back(hash, index);
+				}
+				std::sort(temp_v.begin(), temp_v.end(), [](my_pair& a, my_pair& b){
+					return (a.second < b.second);
+				});
+
+				for(auto pair : temp_v){
+					std::cout << "\n\thash = " << pair.first << "\tindex = " << pair.second;
+				}
+			}
+		}
+		void print() const{
+			print_poly();
+			print_hash();
+		}
+		void print_num() const{
+			std::size_t n = 1;
+			for(auto& sub_v : poly_container){
+				std::cout << "\nNum cell = " << n << "\t# Poly = " << sub_v.size();
+				n++;
+			}
+			std :: cout << "\n";
+			std::size_t m = 1;
+			for(auto& sub_hash_table : hash_container){
+				std::cout << "\nNum cell = " << m << "\t# hash = " << sub_hash_table.size();
+				m++;
+			}
+		}
 	};
 
 	void sort_and_insert_set(memo_Polyomino::_set_t& flat_set, std::vector<memo_Polyomino::point_t>& vector);

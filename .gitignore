@@ -5,3 +5,7 @@ main
 record_main
 *.data
 *.old
+*.json
+*.cache
+perf.data
+perf.data.old

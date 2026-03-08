@@ -87,11 +87,37 @@ void test2(){
     }
 }
 
+constexpr std::size_t N = 11;
+
 void test3(){
     using namespace int_pair_v3;
 
-    std :: cout << "\n" << sizeof(free_Polyomino);
+	timing::timer<std::chrono::milliseconds> my_timer;
+	my_timer.start();
+
+    unified_container uc(N);
+
+	my_timer.end_print();
+
+	uc.print_num();
 }
+
+void test4(){
+	using namespace int_pair_v2;
+
+	timing::timer<std::chrono::milliseconds> my_timer;
+    my_timer.start();
+
+   	Polyomino_class all(N);
+
+	my_timer.end_print();
+
+    all.print_num();
+}
+
+// void test5(){
+
+// }
 
 void generate(const int num_cells){
     using namespace int_pair_v2;
@@ -109,9 +135,9 @@ void generate(const int num_cells){
 }
 
 int main(void){
+	test3();
 
-    constexpr int num_cells = 13;
+	// std::cout << "\n\n\n";
 
-    timing::measure(generate, num_cells);
-    //also print the time used to generate free poly
+	test4();
 }

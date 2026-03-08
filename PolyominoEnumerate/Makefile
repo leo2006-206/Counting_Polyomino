@@ -40,7 +40,7 @@ OBJ_RECORD  = $(TARGET_HEADER:%=$(PATH_RECORD)%.record.o)	$(TARGET_MAIN).record.
 ASSEMBLY    = $(TARGET_HEADER:%=$(PATH_ASM)%.s)			$(TARGET_MAIN).s
 
 # ---- default ----
-.PHONY: run debug clean asm
+.PHONY: run debug clean asm ssh
 
 run: main
 	./main
@@ -51,12 +51,21 @@ debug: debug_main
 asm: main_dis.s $(ASSEMBLY)
 
 stat: main
-	perf stat -d ./main
+	perf stat -ddd ./main
 
 record: record_main
 	perf record ./record_main
 	perf report
 
+taskset: main
+	taskset -c 8 ./main
+
+flame: main
+	taskset -c 8 perf record -g ./main
+	perf script | ~/SCC/Project/FlameGraph/stackcollapse-perf.pl | ~//SCC/Project/FlameGraph/flamegraph.pl > flame_graph.svg
+
+bear:
+	bear -- make run
 
 # ---- link ----
 main: $(OBJ_SPEED)

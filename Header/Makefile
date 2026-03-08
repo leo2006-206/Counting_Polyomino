@@ -13,7 +13,7 @@ TARGET_HEADER = Poly_Int_Pair_v1 Poly_Int_Pair_v2 Poly_Int_Pair_v3 Testcase_Int_
 
 # ---- flags ----
 HEADER      = -I$(HEADER_PATH)
-WARN        = -Wall -Wextra -Wpedantic
+WARN        = -std=c++20 -Wall -Wextra -Wpedantic
 OPT_NON_LTO = -O3 -march=native
 OPT         = $(OPT_NON_LTO) -flto=auto
 THREAD 		= -fopenmp
