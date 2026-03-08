@@ -7,5 +7,6 @@ record_main
 *.old
 *.json
 *.cache
+*.svg
 perf.data
 perf.data.old
