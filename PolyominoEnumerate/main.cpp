@@ -133,10 +133,10 @@ void generate_v3(const int num_cells){
     all.print_num();
 }
 
-constexpr std::size_t N = 9;
+constexpr std::size_t N = 13;
 
 int main(void){
 	// generate_v1(N);
-	generate_v2(N);
-	// generate_v3(N);
+	// generate_v2(N);
+	generate_v3(N);
 }
