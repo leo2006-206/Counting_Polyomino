@@ -351,7 +351,7 @@ namespace int_pair_v1{
 				// for(auto j = _array[i].cbegin(); j != _array[i].cend(); ++j){
 				//     j->print();
 				// }
-				std::cout<<"\n";
+				// std::cout<<"\n";
 			}
 		}
 		void file_write(const char* in_file_name){

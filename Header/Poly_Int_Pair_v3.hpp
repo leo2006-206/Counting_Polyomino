@@ -365,7 +365,7 @@ namespace int_pair_v3{
 		using	poly_t = free_Polyomino;
 		using	hash_t = poly_t::hash_t;
 
-		using	hash_table_t	= boost::unordered::unordered_node_map<hash_t, std::size_t>;
+		using	hash_table_t	= boost::unordered::unordered_flat_map<hash_t, std::size_t>;
 		using	poly_vector_t	= std::vector<poly_t>;
 
 		using	hash_container_t	= std::vector<hash_table_t>;

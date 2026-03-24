@@ -1,5 +1,5 @@
 #COMPILER = clang++
-COMPILER   = g++
+COMPILER   = g++-16
 NAME       = Polyomino
 
 HEADER_PATH	= ./

@@ -1,5 +1,5 @@
 #COMPILER = clang++
-COMPILER   = g++
+COMPILER   = g++-16
 NAME       = Polyomino
 
 HEADER_PATH	= ../Header/
@@ -43,7 +43,7 @@ ASSEMBLY    = $(TARGET_HEADER:%=$(PATH_ASM)%.s)			$(TARGET_MAIN).s
 .PHONY: run debug clean asm ssh
 
 run: main
-	./main
+	taskset -c 8 ./main
 
 debug: debug_main
 	./debug_main
@@ -51,7 +51,7 @@ debug: debug_main
 asm: main_dis.s $(ASSEMBLY)
 
 stat: main
-	perf stat -ddd ./main
+	perf stat -ddd taskset -c 8 ./main
 
 record: record_main
 	perf record ./record_main

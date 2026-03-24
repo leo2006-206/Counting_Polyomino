@@ -433,7 +433,7 @@ namespace int_pair_v2{
 		using poly_t = memo_Polyomino;
 		using point_t = memo_Polyomino::point_t;
 		using hash_t = memo_Polyomino::hash_t;
-		using hash_table_t = boost::unordered::unordered_node_map<hash_t, std::size_t>;
+		using hash_table_t = boost::unordered::unordered_flat_map<hash_t, std::size_t>;
 		using hash_container_t = std::vector<hash_table_t>;
 		using poly_container_t = std::vector<std::vector<poly_t>>;
 

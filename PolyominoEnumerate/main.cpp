@@ -87,42 +87,28 @@ void test2(){
     }
 }
 
-constexpr std::size_t N = 11;
-
-void test3(){
-    using namespace int_pair_v3;
-
-	timing::timer<std::chrono::milliseconds> my_timer;
-	my_timer.start();
-
-    unified_container uc(N);
-
-	my_timer.end_print();
-
-	uc.print_num();
-}
-
-void test4(){
-	using namespace int_pair_v2;
+void generate_v1(const int num_cells){
+	using namespace int_pair_v1;
 
 	timing::timer<std::chrono::milliseconds> my_timer;
     my_timer.start();
 
-   	Polyomino_class all(N);
+   	BST_Group all(num_cells);
 
 	my_timer.end_print();
 
-    all.print_num();
+    all.print();
 }
 
-// void test5(){
-
-// }
-
-void generate(const int num_cells){
+void generate_v2(const int num_cells){
     using namespace int_pair_v2;
 
-    Polyomino_class all(num_cells);
+    timing::timer<std::chrono::milliseconds> my_timer;
+    my_timer.start();
+
+   	Polyomino_class all(num_cells);
+
+	my_timer.end_print();
     //generate all free polyominoes from 1 to num_cells
 
     all.print_num();
@@ -134,10 +120,23 @@ void generate(const int num_cells){
     //and print all the hash value for each cumber of cell
 }
 
+void generate_v3(const int num_cells){
+	using namespace int_pair_v3;
+
+	timing::timer<std::chrono::milliseconds> my_timer;
+    my_timer.start();
+
+   	unified_container all(num_cells);
+
+	my_timer.end_print();
+
+    all.print_num();
+}
+
+constexpr std::size_t N = 9;
+
 int main(void){
-	test3();
-
-	// std::cout << "\n\n\n";
-
-	test4();
+	// generate_v1(N);
+	generate_v2(N);
+	// generate_v3(N);
 }
