@@ -12,6 +12,12 @@ Stage 1 `Poly_Int_Pair_v1`:
 |9|4014 ms|4033 ms|4065 ms|4067 ms|4076 ms|4051.0 ms ± 26.3 ms|
 |10|65338 ms|65871 ms|67335 ms|68792 ms|76984 ms|68864.0 ms ± 4734.7 ms|
 
+|Number of cells|Average (± Std Dev)|
+|:---:|:---:|
+|8|290.8 ms ± 1.9 ms|
+|9|4051.0 ms ± 26.3 ms|
+|10|68864.0 ms ± 4734.7 ms|
+
 Stage 2 `Poly_Int_Pair_v2`:
 
 |Number of cells|Duration 1|Duration 2|Duration 3|Duration 4|Duration 5|Average (± Std Dev)|
