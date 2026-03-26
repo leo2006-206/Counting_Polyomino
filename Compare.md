@@ -40,9 +40,9 @@ Version 2 `Poly_Int_Pair_v2`:
 
 |Number of cells|Speedup compare to Stage 1|
 |:---:|:---:|
-|8| $$\frac{289 \text{ ms}}{3 \text{ ms}} \approx 96\text{ Speedup}$$|
-|9| $$\frac{4014 \text{ ms}}{14 \text{ ms}} \approx 286\text{ Speedup}$$|
-|10| $$\frac{65338 \text{ ms}}{60 \text{ ms}} \approx 1088\text{ Speedup}$$|
+|8| $$\frac{290 \text{ ms}}{3 \text{ ms}} \approx 96\text{ Speedup}$$|
+|9| $$\frac{4051 \text{ ms}}{15 \text{ ms}} \approx 270\text{ Speedup}$$|
+|10| $$\frac{68864 \text{ ms}}{61 \text{ ms}} \approx 1128\text{ Speedup}$$|
 
 Stage 3 `Poly_Int_Pair_v3`:
 
