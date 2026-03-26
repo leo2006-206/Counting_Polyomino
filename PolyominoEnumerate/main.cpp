@@ -87,8 +87,34 @@ void test2(){
     }
 }
 
+void test3(){
+	using namespace int_pair_v3;
+
+	std::array<std::pair<int, int>, 4> non_empty = {{
+        {0, 0},
+        {0, 1},
+		{1, 0},
+		{1, -1}
+    }};
+
+	memo_Polyomino base1;
+
+    for(auto [x, y] : non_empty){
+        base1._cells.emplace(x, y);
+    }
+
+    base1.generate_adj_empty_cells();
+	base1.print_py_image();
+	
+	// free_Polyomino fp(base1);
+
+	// fp.
+};
+
 void generate_v1(const int num_cells){
 	using namespace int_pair_v1;
+
+	std::cout<<"\nEnumeration Model int_pair_v1 with # cells "<<num_cells;
 
 	timing::timer<std::chrono::milliseconds> my_timer;
     my_timer.start();
@@ -102,6 +128,8 @@ void generate_v1(const int num_cells){
 
 void generate_v2(const int num_cells){
     using namespace int_pair_v2;
+
+	std::cout<<"\nEnumeration Model int_pair_v2 with # cells "<<num_cells;
 
     timing::timer<std::chrono::milliseconds> my_timer;
     my_timer.start();
@@ -123,6 +151,8 @@ void generate_v2(const int num_cells){
 void generate_v3(const int num_cells){
 	using namespace int_pair_v3;
 
+	std::cout<<"\nEnumeration Model int_pair_v3 with # cells "<<num_cells;
+
 	timing::timer<std::chrono::milliseconds> my_timer;
     my_timer.start();
 
@@ -130,13 +160,15 @@ void generate_v3(const int num_cells){
 
 	my_timer.end_print();
 
-    all.print_num();
+    all.print_num_line();
 }
 
-constexpr std::size_t N = 13;
+constexpr std::size_t N = 9;
 
 int main(void){
-	// generate_v1(N);
+	generate_v1(N);
 	// generate_v2(N);
-	generate_v3(N);
+	// generate_v3(N);
+
+	// test3();
 }

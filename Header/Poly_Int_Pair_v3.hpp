@@ -427,6 +427,14 @@ namespace int_pair_v3{
 				m++;
 			}
 		}
+
+		void print_num_line() const{
+			for(std::size_t i = 0; i < poly_container.size(); ++i){
+				std::cout 	<<"\nNum cell = " << i+1 
+							<<"\t# Poly = " << poly_container[i].size()
+							<<"\t# Hash = " << hash_container[i].size();
+			}
+		}
 	};
 
 	void sort_and_insert_set(memo_Polyomino::_set_t& flat_set, std::vector<memo_Polyomino::point_t>& vector);

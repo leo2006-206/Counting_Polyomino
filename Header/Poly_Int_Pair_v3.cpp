@@ -617,13 +617,13 @@ namespace int_pair_v3{
     void memo_Polyomino::print_py_image() const{
         std::cout<<"\nnon_empty = [";
         for(point_t p : _cells){
-            std::cout<<"\n"<<p.str();
+            std::cout<<"\n"<<p.str()<<",";
         }
         std::cout<<"\n]";
 
         std::cout<<"\nempty = [";
         for(point_t p : _empty_cells){
-            std::cout<<"\n"<<p.str();
+            std::cout<<"\n"<<p.str()<<",";
         }
         std::cout<<"\n]\n";
     }

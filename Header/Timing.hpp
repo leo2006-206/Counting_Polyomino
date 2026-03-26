@@ -52,7 +52,7 @@ namespace timing{
             finish();
             std::cout<<"\n\n\x1b[36mDuration\t"<<text<<" = "<<
             std::chrono::duration_cast<T>(after - before).count()<<
-            timer_unit<T>::unit_text<<"\x1b[0m\n\n";
+            timer_unit<T>::unit_text<<"\x1b[0m\n";
         }
         std::int64_t end_time(){
             finish();

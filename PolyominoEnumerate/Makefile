@@ -54,7 +54,7 @@ stat: main
 	perf stat -ddd taskset -c 8 ./main
 
 record: record_main
-	perf record ./record_main
+	perf record taskset -c 8 ./main
 	perf report
 
 taskset: main
